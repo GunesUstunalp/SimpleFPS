@@ -89,6 +89,8 @@ void ASimpleFPSCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
+	currentAmmo = maxAmmo; //added
+
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
@@ -141,8 +143,9 @@ void ASimpleFPSCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 void ASimpleFPSCharacter::OnFire()
 {
 	// try and fire a projectile
-	if (ProjectileClass != nullptr)
+	if (ProjectileClass != nullptr && currentAmmo > 0) //added
 	{
+		currentAmmo--; //added
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{
@@ -166,24 +169,24 @@ void ASimpleFPSCharacter::OnFire()
 				World->SpawnActor<ASimpleFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 			}
 		}
-	}
 
-	// try and play the sound if specified
-	if (FireSound != nullptr)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	}
-
-	// try and play a firing animation if specified
-	if (FireAnimation != nullptr)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != nullptr)
+		// try and play the sound if specified
+		if (FireSound != nullptr)
 		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 		}
-	}
+
+		// try and play a firing animation if specified
+		if (FireAnimation != nullptr)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 1.f);
+			}
+		}
+	}	
 }
 
 void ASimpleFPSCharacter::OnResetVR()
@@ -297,4 +300,17 @@ bool ASimpleFPSCharacter::EnableTouchscreenMovement(class UInputComponent* Playe
 	}
 	
 	return false;
+}
+
+//ADDED
+void ASimpleFPSCharacter::AddAmmo(int amount)
+{
+	currentAmmo += amount;
+	if (currentAmmo > maxAmmo)
+		currentAmmo = maxAmmo;
+}
+
+void ASimpleFPSCharacter::AddMaxAmmo(int amount)
+{
+	maxAmmo += amount;
 }

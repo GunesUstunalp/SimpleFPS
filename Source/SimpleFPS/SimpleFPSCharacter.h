@@ -52,6 +52,11 @@ class ASimpleFPSCharacter : public ACharacter
 	UMotionControllerComponent* L_MotionController;
 
 public:
+	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = "Ammo")
+		int maxAmmo; //added
+
+	UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = "Ammo")
+		int currentAmmo; //added
 	ASimpleFPSCharacter();
 
 protected:
@@ -144,5 +149,7 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	void AddAmmo(int amount);
+	void AddMaxAmmo(int amount);
 };
 
