@@ -27,7 +27,8 @@ void AAmmoPickup::BeginPlay()
 void AAmmoPickup::OnPickupEvent(UPrimitiveComponent* overlappedComp, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
 	ASimpleFPSCharacter* myProjectCharacter = Cast<ASimpleFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	myProjectCharacter->AddAmmo(ammoPickupVal);
-
-	Destroy();
+	if (myProjectCharacter != nullptr) {
+		myProjectCharacter->AddAmmo(ammoPickupVal);
+		Destroy();
+	}
 }

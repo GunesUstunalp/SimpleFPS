@@ -28,8 +28,9 @@ void AMaxAmmoPickup::BeginPlay()
 void AMaxAmmoPickup::OnPickupEvent(UPrimitiveComponent* overlappedComp, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
 	ASimpleFPSCharacter* myProjectCharacter = Cast<ASimpleFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	myProjectCharacter->AddMaxAmmo(ammoPickupVal);
-
-	Destroy();
+	if (myProjectCharacter != nullptr) {
+		myProjectCharacter->AddMaxAmmo(ammoPickupVal);
+		Destroy();
+	}
 }
 
