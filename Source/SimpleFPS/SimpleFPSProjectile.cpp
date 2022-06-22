@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "StationaryEnemy.h"
-#include "MovingEnemy.h"
 #include "SimpleFPSProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
@@ -37,16 +36,10 @@ ASimpleFPSProjectile::ASimpleFPSProjectile()
 void ASimpleFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if (OtherActor != nullptr && OtherActor != this && OtherComp != nullptr 
-		&& (OtherActor->IsA(AStationaryEnemy::StaticClass()) || OtherActor->IsA(AMovingEnemy::StaticClass())))
+		&& OtherActor->IsA(AStationaryEnemy::StaticClass()))
 	{
-		if (OtherActor->IsA(AStationaryEnemy::StaticClass())) {
-			AStationaryEnemy* enemy = Cast<AStationaryEnemy>(OtherActor);
-			enemy->health -= FMath::RandRange(5, 10);
-		}
-		else {
-			AMovingEnemy* enemy = Cast<AMovingEnemy>(OtherActor);
-			enemy->health -= FMath::RandRange(5, 10);
-		}
+		AStationaryEnemy* enemy = Cast<AStationaryEnemy>(OtherActor);
+		enemy->health -= FMath::RandRange(5, 10);
 		Destroy();
 	}
 }

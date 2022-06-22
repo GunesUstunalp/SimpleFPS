@@ -42,6 +42,9 @@ void AStationaryEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (health <= 0)
+		Destroy();
+
 	FVector NewLocation = GetActorLocation();
 	FRotator NewRotation = GetActorRotation();
 	float RunningTime = GetGameTimeSinceCreation();
@@ -51,8 +54,14 @@ void AStationaryEnemy::Tick(float DeltaTime)
 	NewRotation.Yaw += DeltaRotation;
 	SetActorLocationAndRotation(NewLocation, NewRotation);
 
-
-	if (health <= 0)
-		Destroy();
+	ASimpleFPSCharacter* myCharacter = Cast<ASimpleFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (myCharacter != nullptr) {
+		distanceToCharacter = (GetActorLocation() - myCharacter->GetActorLocation()).Size();
+		if (distanceToCharacter < triggerRadius && distanceToCharacter > 100) {
+			NewLocation = GetActorLocation() - (GetActorLocation() - myCharacter->GetActorLocation()) * 0.01f;
+			SetActorLocationAndRotation(NewLocation, NewRotation);
+		}
+	}
 }
+
 

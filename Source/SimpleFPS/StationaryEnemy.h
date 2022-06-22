@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <SimpleFPS/SimpleFPSCharacter.h>
+#include <Runtime/Engine/Classes/Kismet/GameplayStatics.h>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "StationaryEnemy.generated.h"
@@ -22,6 +24,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 		class UWidgetComponent* HealthWidgetComp;
+
+	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = "EnemyBehavior")
+		int triggerRadius;
+
+	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = "EnemyBehavior")
+		float distanceToCharacter;
 
 protected:
 	// Called when the game starts or when spawned
