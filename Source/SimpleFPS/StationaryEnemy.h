@@ -13,12 +13,15 @@ class SIMPLEFPS_API AStationaryEnemy : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	AStationaryEnemy();
+	AStationaryEnemy( const FObjectInitializer& ObjectInitializer);
 	UPROPERTY(VisibleAnywhere)
 		UStaticMeshComponent* VisualMesh;
 
 	UPROPERTY(VisibleAnywhere)
 		int health;
+
+	UPROPERTY(VisibleAnywhere)
+		class UWidgetComponent* HealthWidgetComp;
 
 protected:
 	// Called when the game starts or when spawned

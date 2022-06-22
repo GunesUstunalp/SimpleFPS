@@ -2,9 +2,11 @@
 
 
 #include "StationaryEnemy.h"
+#include <Components/WidgetComponent.h>
+#include "HealthBar.h"
 
 // Sets default values
-AStationaryEnemy::AStationaryEnemy()
+AStationaryEnemy::AStationaryEnemy(const FObjectInitializer& ObjectInitializer)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -19,6 +21,9 @@ AStationaryEnemy::AStationaryEnemy()
 		VisualMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	}
 
+	HealthWidgetComp = ObjectInitializer.CreateDefaultSubobject<UWidgetComponent>(this, TEXT("HealthBar"));
+	HealthWidgetComp->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+
 	health = 100;
 }
 
@@ -27,12 +32,16 @@ void AStationaryEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UHealthBar* HealthBar = Cast<UHealthBar>(HealthWidgetComp->GetUserWidgetObject());
+	HealthBar->setEnemy(this);
+	
 }
 
 // Called every frame
 void AStationaryEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
 	FVector NewLocation = GetActorLocation();
 	FRotator NewRotation = GetActorRotation();
 	float RunningTime = GetGameTimeSinceCreation();
@@ -41,6 +50,7 @@ void AStationaryEnemy::Tick(float DeltaTime)
 	float DeltaRotation = DeltaTime * 20.0f;    //Rotate by 20 degrees per second
 	NewRotation.Yaw += DeltaRotation;
 	SetActorLocationAndRotation(NewLocation, NewRotation);
+
 
 	if (health <= 0)
 		Destroy();
