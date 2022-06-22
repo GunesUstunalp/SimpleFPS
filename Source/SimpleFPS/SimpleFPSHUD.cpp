@@ -12,8 +12,9 @@ ASimpleFPSHUD::ASimpleFPSHUD()
 	// Set the crosshair texture
 	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshairTexObj(TEXT("/Game/FirstPerson/Textures/FirstPersonCrosshair"));
 	CrosshairTex = CrosshairTexObj.Object;
-
-	ammoFont = GEngine->GetMediumFont();
+	
+	if(GEngine)
+		ammoFont = GEngine->GetMediumFont();
 }
 
 
@@ -37,6 +38,7 @@ void ASimpleFPSHUD::DrawHUD()
 	Canvas->DrawItem( TileItem );
 
 	//ADDED
+	
 	ASimpleFPSCharacter* myProjectCharacter = Cast<ASimpleFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	FString ammoText = FString::Printf(TEXT("Ammo: %02d/%02d"), myProjectCharacter->currentAmmo, myProjectCharacter->maxAmmo);
 	Canvas->SetDrawColor(FColor::Red);
