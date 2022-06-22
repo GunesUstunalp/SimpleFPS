@@ -6,22 +6,28 @@
 // Sets default values
 AAmmoPickup::AAmmoPickup()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
+	AmmoPickupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AmmoPickupMesh"));
+	RootComponent = AmmoPickupMesh;
+
+	PickupBox = CreateDefaultSubobject<UBoxComponent>(TEXT("PickupBox"));
+	PickupBox->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+	PickupBox->SetGenerateOverlapEvents(true);
+	PickupBox->OnComponentBeginOverlap.AddDynamic(this, &AAmmoPickup::OnPickupEvent);
+	PickupBox->AttachToComponent(AmmoPickupMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
 // Called when the game starts or when spawned
 void AAmmoPickup::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
-// Called every frame
-void AAmmoPickup::Tick(float DeltaTime)
+void AAmmoPickup::OnPickupEvent(UPrimitiveComponent* overlappedComp, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
-	Super::Tick(DeltaTime);
+	ASimpleFPSCharacter* myProjectCharacter = Cast<ASimpleFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	myProjectCharacter->AddAmmo(ammoPickupVal);
 
+	Destroy();
 }
-
